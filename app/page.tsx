@@ -1,9 +1,15 @@
-'use client'
+'use client';
+
 import { useState } from 'react';
+
+type AnalysisResult = {
+  label: string;
+  score: number;
+}[];
 
 const Home = () => {
   const [emailContent, setEmailContent] = useState('');
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const analyzeEmail = async () => {
@@ -17,41 +23,38 @@ const Home = () => {
         body: JSON.stringify({ text: emailContent }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: AnalysisResult = await response.json();
       setAnalysisResult(data);
     } catch (error) {
       console.error('Error analyzing email:', error);
-      setAnalysisResult({ error: 'Failed to analyze email content.' });
+      setAnalysisResult([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const renderAnalysisResult = (result: any) => {
-    if (result.error) {
-      return <p className="text-red-500 font-semibold">Error: {result.error}</p>;
+  const renderAnalysisResult = (result: AnalysisResult) => {
+    if (result.length === 0) {
+      return <p className="text-yellow-500 font-semibold">No analysis result found.</p>;
     }
-  
-    // Check if the result contains the expected data
-    if (result && result[0] && result[0][0]) {
-      const { label, score } = result[0][0];
-      return (
-        <div className="mt-6 p-6 border rounded-lg bg-blue-50 shadow-xl">
-          <h3 className="text-xl font-bold text-blue-700">Analysis Result</h3>
-          <p className="mt-2 text-lg text-blue-800">
-            <span className="font-semibold">Prediction:</span> {label}
-          </p>
-          <p className="text-blue-600">
-            <span className="font-semibold">Confidence:</span> {(score * 100).toFixed(2)}%
-          </p>
-        </div>
-      );
-    }
-  
-    // Handle case where result format is unexpected
-    return <p className="text-yellow-500 font-semibold">Invalid response format.</p>;
+
+    const { label, score } = result[0];
+    return (
+      <div className="mt-6 p-6 border rounded-lg bg-blue-50 shadow-xl">
+        <h3 className="text-xl font-bold text-blue-700">Analysis Result</h3>
+        <p className="mt-2 text-lg text-blue-800">
+          <span className="font-semibold">Prediction:</span> {label}
+        </p>
+        <p className="text-blue-600">
+          <span className="font-semibold">Confidence:</span> {(score * 100).toFixed(2)}%
+        </p>
+      </div>
+    );
   };
-  
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 via-white to-blue-50 flex items-center justify-center">
@@ -68,7 +71,6 @@ const Home = () => {
           value={emailContent}
           onChange={(e) => setEmailContent(e.target.value)}
         />
-
         <button
           className={`mt-6 w-full py-3 px-4 rounded-lg text-white font-semibold transition ${
             loading || !emailContent.trim()
