@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Malicious Email Detector",
   description: "Scam Email Detector",
 };
 
