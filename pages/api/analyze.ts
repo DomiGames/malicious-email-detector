@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ message: 'Text is required' });
   }
 
-  if (!process.env.HUGGINGFACE_API_KEY) {
+  if (!process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY) {
     return res.status(500).json({ message: 'Hugging Face API key is not configured' });
   }
 
