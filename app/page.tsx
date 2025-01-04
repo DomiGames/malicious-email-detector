@@ -5,7 +5,7 @@ import { useState } from 'react';
 type AnalysisResult = {
   label: string;
   score: number;
-}[];
+}[][]; // Updated to reflect the nested structure
 
 const Home = () => {
   const [emailContent, setEmailContent] = useState('');
@@ -28,6 +28,8 @@ const Home = () => {
       }
 
       const data: AnalysisResult = await response.json();
+      console.log('API Response:', data); // Log the raw response for debugging
+
       setAnalysisResult(data);
     } catch (error) {
       console.error('Error analyzing email:', error);
@@ -38,11 +40,18 @@ const Home = () => {
   };
 
   const renderAnalysisResult = (result: AnalysisResult) => {
-    if (result.length === 0) {
+    if (!result || result.length === 0 || result[0].length === 0) {
       return <p className="text-yellow-500 font-semibold">No analysis result found.</p>;
     }
 
-    const { label, score } = result[0];
+    // Get the highest scored label
+    const [positive, negative] = result[0]; // The first array contains the labels
+    const highest = positive.score > negative.score ? positive : negative;
+    const { label, score } = highest;
+
+    // Ensure score is a valid number before displaying
+    const confidence = isNaN(score) ? 'N/A' : (score * 100).toFixed(2);
+
     return (
       <div className="mt-6 p-6 border rounded-lg bg-blue-50 shadow-xl">
         <h3 className="text-xl font-bold text-blue-700">Analysis Result</h3>
@@ -50,7 +59,7 @@ const Home = () => {
           <span className="font-semibold">Prediction:</span> {label}
         </p>
         <p className="text-blue-600">
-          <span className="font-semibold">Confidence:</span> {(score * 100).toFixed(2)}%
+          <span className="font-semibold">Confidence:</span> {confidence}%
         </p>
       </div>
     );
