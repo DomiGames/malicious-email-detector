@@ -69,7 +69,7 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-r from-blue-50 via-white to-blue-50 flex items-center justify-center">
       <div className="max-w-2xl w-full p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-extrabold text-center text-blue-600 mb-6">
-          Malicious Email Detector
+          Domi Malicious Email Detector
         </h1>
         <p className="text-gray-600 text-center mb-6">
           Paste your email content below to analyze if it contains malicious content.
