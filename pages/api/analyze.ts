@@ -11,10 +11,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { text } = req.body;
+  let { text } = req.body;
+
+  if (!text || typeof text !== 'string') {
+    return res.status(400).json({ message: 'Valid text is required' });
+  }
+
+  text = text.trim(); // Trim leading and trailing spaces
 
   if (!text) {
-    return res.status(400).json({ message: 'Text is required' });
+    return res.status(400).json({ message: 'Text cannot be empty after trimming' });
   }
 
   if (!process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY) {
