@@ -6,7 +6,7 @@ export default function SocialLinks() {
   return (
     <div className="mt-6 flex justify-center gap-6">
       <a
-        href="https://github.com/YourGitHubUsername"
+        href="https://github.com/DomiGames"
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-800 hover:text-gray-600 transition"
@@ -14,7 +14,7 @@ export default function SocialLinks() {
         <FaGithub size={32} />
       </a>
       <a
-        href="https://x.com/YourTwitterHandle"
+        href="https://x.com/domic137"
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-800 hover:text-gray-600 transition"
